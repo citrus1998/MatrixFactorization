@@ -42,7 +42,7 @@ if __name__=='__main__':
     parser.add_argument('--batch_size', type=int, default=512, help='')
     parser.add_argument('--num_epochs', type=int, default=100, help='')
     parser.add_argument('--plot', type=str, default='')
-    parser.add_argument('--num_layers_for_mf', type=int, default=3)
+    parser.add_argument('--num_layers_for_mf', type=int, default=6)
     
     args = parser.parse_args() 
     
