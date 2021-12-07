@@ -1,3 +1,4 @@
+import os, sys
 import pandas as pd
 
 import torch
@@ -38,9 +39,16 @@ class JesterRatingswithText(Dataset):
     def __init__(self, rating_file, text_file):
         rating = pd.read_csv(rating_file, header=0)
         text = pd.read_csv(text_file, header=0)
+        df = pd.merge(text, rating, how="outer", on = "jokeId")
 
-    
-    
+        if not os.path.exists('datas/all_jester'):
+            os.mkdir('datas/all_jester')
+        df.to_csv("datas/all_jester/total.csv", index=False)
+
+        dfr = pd.read_csv('./datas/all_jester/total.csv')
+
+        self.samples = torch.from_numpy(dfr.values.astype('int').astype('float64').astype('str'))
+
     def __len__(self):
         return len(self.samples)
 
