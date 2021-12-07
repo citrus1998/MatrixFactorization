@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "./jester.py", line 54, in <module>
+    data = JesterRatings('../datas/jester/jester_ratings.csv')
+TypeError: __init__() missing 1 required positional argument: 'text_file'

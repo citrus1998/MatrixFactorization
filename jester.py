@@ -43,6 +43,7 @@ if __name__=='__main__':
     parser.add_argument('--num_epochs', type=int, default=100, help='')
     parser.add_argument('--plot', type=str, default='')
     parser.add_argument('--num_layers_for_mf', type=int, default=6)
+    parser.add_argument('--l2_lambda', type=float, default=0.001)
     
     args = parser.parse_args() 
     
@@ -96,9 +97,11 @@ if __name__=='__main__':
                 # forward
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
-                    outputs = model(user_ids.type('torch.LongTensor'), joke_ids.type('torch.LongTensor'))
+                    outputs, output_user, output_item = model(user_ids.type('torch.LongTensor'), joke_ids.type('torch.LongTensor'))
                     preds = torch.round(outputs)
                     loss = criterion(outputs, ratings)
+                    l2_norm = sum(u.pow(2.0).sum() for u in output_user) + sum(v.pow(2.0).sum() for v in output_item)
+                    loss = loss + args.l2_lambda * l2_norm
 
                     # backward + optimize only if in training phase
                     if phase == 'train':

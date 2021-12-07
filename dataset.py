@@ -33,3 +33,17 @@ class JesterRatings(Dataset):
     def __getitem__(self, idx):
         # every sample is a tensor with 3 values: user ID, movie ID, and rating
         return self.samples[idx]
+
+class JesterRatingswithText(Dataset):
+    def __init__(self, rating_file, text_file):
+        rating = pd.read_csv(rating_file, header=0)
+        text = pd.read_csv(text_file, header=0)
+
+    
+    
+    def __len__(self):
+        return len(self.samples)
+
+    def __getitem__(self, idx):
+        # every sample is a tensor with 3 values: user ID, movie ID, and rating
+        return self.samples[idx]

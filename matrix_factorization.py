@@ -41,4 +41,4 @@ class MatrixFactorization(nn.Module):
         # Ratings
         ratings = (users_latent * items_latent).sum(dim=1)
 
-        return F.relu(ratings)
+        return F.relu(ratings), users_latent, items_latent
