@@ -13,7 +13,7 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader, random_split
 from tqdm import trange
 
-from matrix_factorization import MatrixFactorization
+from models import MatrixFactorization
 from dataset import MovieRatings
 
 import warnings

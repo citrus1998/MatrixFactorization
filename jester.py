@@ -13,7 +13,7 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader, random_split
 from tqdm import trange
 
-from matrix_factorization import MatrixFactorization
+from models import MatrixFactorization, SingularValueDecomposition
 from dataset import JesterRatings, MovieRatings
 
 import warnings
@@ -42,8 +42,9 @@ if __name__=='__main__':
     parser.add_argument('--batch_size', type=int, default=512, help='')
     parser.add_argument('--num_epochs', type=int, default=100, help='')
     parser.add_argument('--plot', type=str, default='')
-    parser.add_argument('--num_layers_for_mf', type=int, default=6)
+    parser.add_argument('--num_layers_for_mf', type=int, default=8)
     parser.add_argument('--l2_lambda', type=float, default=0.001)
+    parser.add_argument('--is_svd', type=str, default='no')
     
     args = parser.parse_args() 
     
@@ -65,7 +66,11 @@ if __name__=='__main__':
     dataset_sizes = {'train': train_size, 'val': val_size}
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model = MatrixFactorization(int(data[:, 0].max().item())+1, int(data[:, 1].max().item())+1, args.num_layers_for_mf, num_latent=30).to(device)
+
+    if args.is_svd == 'no':
+        model = MatrixFactorization(int(data[:, 0].max().item())+1, int(data[:, 1].max().item())+1, args.num_layers_for_mf, num_latent=30).to(device)
+    else:
+        model = SingularValueDecomposition(int(data[:, 0].max().item())+1, int(data[:, 1].max().item())+1, args.num_layers_for_mf).to(device)
 
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
@@ -97,7 +102,8 @@ if __name__=='__main__':
                 # forward
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
-                    outputs, output_user, output_item = model(user_ids.type('torch.LongTensor'), joke_ids.type('torch.LongTensor'))
+                    if args.is_svd == 'no':
+                        outputs, output_user, output_item = model(user_ids.type('torch.LongTensor'), joke_ids.type('torch.LongTensor'))
                     preds = torch.round(outputs)
                     loss = criterion(outputs, ratings)
                     l2_norm = sum(u.pow(2.0).sum() for u in output_user) + sum(v.pow(2.0).sum() for v in output_item)

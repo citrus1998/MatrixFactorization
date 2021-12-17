@@ -14,6 +14,16 @@ def net_maker(io_layer, dropout):
 
     return nn.Sequential(*net)
 
+class SingularValueDecomposition(nn.Module):
+    def __init__(self, num_users, num_items, num_layers):
+        super(SingularValueDecomposition, self).__init__()
+        self.svd = torch.svd(torch.Tensor(num_users, num_items))
+        self.num_layers = num_layers
+
+    def forward(self):
+        self.user_features, self.singlar, self.item_features = self.svd()
+
+
 
 class MatrixFactorization(nn.Module):
     def __init__(self, num_users, num_items, num_layers, num_latent=30):
