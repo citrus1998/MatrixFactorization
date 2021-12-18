@@ -10,3 +10,7 @@ However, you can use shellscript better as follow:
 ~~~
 bash scripts/main.sh
 ~~~
+In addition, if you wanna compute these programs on background, you can use `nohup` command to learn as follow:
+~~~
+bash scripts/{dataset}_nhp.sh
+~~~  
