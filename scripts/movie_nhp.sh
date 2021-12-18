@@ -3,8 +3,7 @@ scripts/count.pl
 val=$(cat scripts/log.txt)
 
 #https://qiita.com/Kobecow/items/bd2cee4b5f2ab51f656b
-#python3 ./main.py \
-nohup python3 ./jester.py \
---num_epochs 100 \
+nohup python3 main.py \
+--num_epochs 3 \
 --plot "$val_$today" \
-> log/$val_$today.text & \
+> log/movielens/$val_$today.text & \

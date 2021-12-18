@@ -41,6 +41,8 @@ if __name__=='__main__':
     parser.add_argument('--val_ratio', type=float, default=0.1, help='')
     parser.add_argument('--batch_size', type=int, default=512, help='')
     parser.add_argument('--num_epochs', type=int, default=100, help='')
+    parser.add_argument('--num_layers_for_mf', type=int, default=0)
+    parser.add_argument('--l2_lambda', type=float, default=0.001)
     parser.add_argument('--plot', type=str, default='')
     
     args = parser.parse_args() 
@@ -48,6 +50,9 @@ if __name__=='__main__':
     warnings.simplefilter(action='ignore', category=FutureWarning)
 
     data = MovieRatings('../datas/ml-latest-small/ratings.csv')
+
+    path_name = 'results/movielens/'
+
     val_size = int(len(data) * args.val_ratio)
     train_size = len(data) - val_size
     train, val = random_split(data, [train_size, val_size])
@@ -60,7 +65,7 @@ if __name__=='__main__':
     dataset_sizes = {'train': train_size, 'val': val_size}
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model = MatrixFactorization(int(data[:, 0].max().item())+1, int(data[:, 1].max().item())+1, num_latent=30).to(device)
+    model = MatrixFactorization(int(data[:, 0].max().item())+1, int(data[:, 1].max().item())+1, args.num_layers_for_mf, num_latent=30).to(device)
 
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
@@ -95,9 +100,11 @@ if __name__=='__main__':
                 # forward
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
-                    outputs = model(user_ids.type('torch.LongTensor'), movie_ids.type('torch.LongTensor'))
+                    outputs, output_user, output_item = model(user_ids.type('torch.LongTensor'), movie_ids.type('torch.LongTensor'))
                     preds = torch.round(outputs)
                     loss = criterion(outputs, ratings)
+                    l2_norm = sum(u.pow(2.0).sum() for u in output_user) + sum(v.pow(2.0).sum() for v in output_item)
+                    loss = loss + args.l2_lambda * l2_norm
 
                     # backward + optimize only if in training phase
                     if phase == 'train':

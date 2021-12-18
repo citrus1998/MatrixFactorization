@@ -35,19 +35,15 @@ class JesterRatings(Dataset):
         # every sample is a tensor with 3 values: user ID, movie ID, and rating
         return self.samples[idx]
 
-class JesterRatingswithText(Dataset):
-    def __init__(self, rating_file, text_file):
-        rating = pd.read_csv(rating_file, header=0)
+
+class JesterText(Dataset):
+    def __init__(self, text_file):
         text = pd.read_csv(text_file, header=0)
-        df = pd.merge(text, rating, how="outer", on = "jokeId")
 
-        if not os.path.exists('datas/all_jester'):
-            os.mkdir('datas/all_jester')
-        df.to_csv("datas/all_jester/total.csv", index=False)
+        if not os.path.exists('../datas/all_jester'):
+            os.mkdir('../datas/all_jester')
 
-        dfr = pd.read_csv('./datas/all_jester/total.csv')
-
-        self.samples = torch.from_numpy(dfr.values.astype('int').astype('float64').astype('str'))
+        self.samples = torch.from_numpy(text.values)
 
     def __len__(self):
         return len(self.samples)
