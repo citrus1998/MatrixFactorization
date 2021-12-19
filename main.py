@@ -38,7 +38,7 @@ def plot_save(pd_files, date):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--val_ratio', type=float, default=0.1, help='')
+    parser.add_argument('--val_ratio', type=float, default=0.2, help='')
     parser.add_argument('--batch_size', type=int, default=512, help='')
     parser.add_argument('--num_epochs', type=int, default=100, help='')
     parser.add_argument('--num_layers_for_mf', type=int, default=0)
@@ -53,7 +53,7 @@ if __name__=='__main__':
 
     path_name = 'results/movielens/'
 
-    val_size = int(len(data) * args.val_ratio)
+    val_size = int(len(data) * args.test_ratio)
     train_size = len(data) - val_size
     train, val = random_split(data, [train_size, val_size])
     

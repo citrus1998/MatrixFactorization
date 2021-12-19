@@ -38,7 +38,7 @@ def plot_save(pd_files, date):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--val_ratio', type=float, default=0.1, help='')
+    parser.add_argument('--val_ratio', type=float, default=0.2, help='')
     parser.add_argument('--batch_size', type=int, default=512, help='')
     parser.add_argument('--num_epochs', type=int, default=100, help='')
     parser.add_argument('--plot', type=str, default='')
