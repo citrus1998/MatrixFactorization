@@ -49,7 +49,7 @@ if __name__=='__main__':
     
     warnings.simplefilter(action='ignore', category=FutureWarning)
 
-    data = MovieRatings('../datas/ml-latest-small/ratings.csv')
+    data = MovieRatings('datas/ml-latest-small/ratings.csv')
 
     path_name = 'results/movielens/'
 
