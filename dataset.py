@@ -40,8 +40,8 @@ class JesterText(Dataset):
     def __init__(self, text_file):
         text = pd.read_csv(text_file, header=0)
 
-        if not os.path.exists('../datas/all_jester'):
-            os.mkdir('../datas/all_jester')
+        if not os.path.exists('datas/all_jester'):
+            os.mkdir('datas/all_jester')
 
         self.samples = torch.from_numpy(text.values)
 
