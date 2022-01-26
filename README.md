@@ -5,7 +5,7 @@
 - Movielens
 - Jester
 ## Train
-Fundamentally, you can use `python3 main.py` or `python3 jester.py`.
+Fundamentally, you can use `python3 movielens.py` or `python3 jester.py`.
 However, you can use shellscript better as follow:
 ~~~
 bash scripts/main.sh
